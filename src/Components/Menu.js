@@ -2,23 +2,20 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Icon, Button } from 'react-native-elements';
 
-export default function Menu() {
+export default function Menu({changeView}) {
   return (
     <View style={styles.container}>
       <Button
         type="clear"
-        icon={<Icon name="home" size={25} color="white" />}
-        titleStyle={styles.buttonTitle}
-      />
-      <Button
-        type="clear"
         icon={<Icon name="share" size={25} color="white" />}
         titleStyle={styles.buttonTitle}
+        onPress={() => changeView('Platforms')}
       />
       <Button
         type="clear"
         icon={<Icon name="person" size={25} color="white" />}
         titleStyle={styles.buttonTitle}
+        onPress={() => changeView('Profile')}
       />
     </View>
   );

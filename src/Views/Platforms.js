@@ -13,9 +13,6 @@ export default function Platforms() {
       <PlatformBox />
       <PlatformBox />
       <PlatformBox />
-      <PlatformBox />
-      <PlatformBox />
-      <PlatformBox />
     </ScrollView>
   );
 }
