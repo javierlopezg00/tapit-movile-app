@@ -1,6 +1,6 @@
 
 import { StyleSheet, Text, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Login from './src/Views/Login';
 import SignUp from './src/Views/SignUp';
 import Platforms from './src/Views/Platforms';
@@ -14,14 +14,45 @@ export default function App() {
     setCurrentView(viewName);
   };
 
+  const [userPlatforms, setUserPlatforms] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+          "user_id": 17
+        });
+
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow'
+        };
+
+        const response = await fetch("http://192.168.0.7:3300/user/getUserPlatforms", requestOptions);
+        const result = await response.json();
+        
+        setUserPlatforms(result);
+      } catch (error) {
+        console.log('fetch error:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   let componentToRender;
 
   if (currentView === 'Platforms') {
-    componentToRender = <Platforms />;
+    componentToRender = <Platforms userPlatforms = {userPlatforms} userID = {17}/>;
   } else if (currentView === 'Login') {
     componentToRender = <Login />;
   } else if (currentView === 'Profile') {
-    componentToRender = <Profile />;
+    componentToRender = <Profile userPlatforms = {userPlatforms} userID = {17}/>;
   }
 
 
