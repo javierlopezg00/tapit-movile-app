@@ -1,18 +1,82 @@
-import React from 'react';
-import { StyleSheet, Text, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, ScrollView, View, TextInput, Modal } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import { Icon, Button } from 'react-native-elements';
+import { createUserPlatform, getPlatforms } from '../Components/platformsCRUD'
+
 import PlatformBox from '../Components/PlatformBox';
 
-export default function Platforms() {
+export default function Platforms(props) {
+  const [showModal, setShowModal] = useState(false);
+  const [URL, setURL] = useState('');
+  const [platforms, setPlatforms] = useState([]);
+  const [selectedPlatform, setSelectedPlatform] = useState(''); 
 
+  useEffect(() => {
+    (async () => {
+      const platforms = await getPlatforms();
+      setPlatforms(platforms);
+    })();
+  }, []);
+
+  const handleAddNew = () => {
+    setShowModal(true);
+  };
+
+  const handleCancel = () => {
+    setURL('');
+    setSelectedPlatform('');
+    setShowModal(false);
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <PlatformBox />
-      <PlatformBox />
-      <PlatformBox />
-      <PlatformBox />
-      <PlatformBox />
-      <PlatformBox />
+      {props.userPlatforms.map((platform, index) => (
+        <PlatformBox key={index} platformName={platform.platform} URLImage={platform.icon_url} platformID={platform.id_user_platform} userID={props.userID} />
+      ))}
+      <Button
+        type="clear"
+        icon={<Icon name="add" size={45} color="white" />}
+        onPress={handleAddNew}
+      />
+      <Modal
+        visible={showModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={handleCancel}
+      >
+        <View style={styles.modalContainer}>
+          <Picker
+            selectedValue={selectedPlatform}
+            onValueChange={(itemValue, itemIndex) => setSelectedPlatform(itemValue)}
+            style={styles.picker}
+          >
+            <Picker.Item label="Seleccionar plataforma" value="" />
+            {platforms.map((platform, index) => (
+              <Picker.Item key={index} label={platform.platform} value={platform.id} />
+            ))}
+          </Picker>
+          <TextInput
+            style={styles.textInput}
+            placeholder="URL"
+            value={URL}
+            onChangeText={setURL}
+          />
+          <View>
+            <Button
+              type="clear"
+              icon={<Icon name="done" size={40} color="white" />}
+              onPress={() => {createUserPlatform(props.userID, selectedPlatform, URL)
+                             setShowModal(false);}}
+            />
+            <Button
+              type="clear"
+              icon={<Icon name="close" size={40} color="red" />}
+              onPress={handleCancel}
+            />
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
@@ -23,14 +87,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     width: '80%',
-    paddingTop: 50, // Espacio en la parte superior para separar los elementos del borde
+    paddingTop: 50,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 40
   },
   textInput: {
     padding: '4%',
-    margin: '2%',
     borderColor: 'gray',
     borderWidth: 1,
     width: '100%',
+  },
+  picker: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: 'gray',
+    marginTop: 10,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: "gray"
   },
   mainText: {
     fontSize: 30,

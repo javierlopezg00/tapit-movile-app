@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, Alert, TextInput } from 'react-native'; // Agrega TextInput
 import { Icon, Button } from 'react-native-elements';
+import {updateUserPlatform, deleteUserPlatform} from '../Components/platformsCRUD'
 
-export default function PlatformBox() {
+export default function PlatformBox( props ) {
   const [editing, setEditing] = useState(false);
   const [editedUrl, setEditedUrl] = useState('');
   
@@ -18,8 +19,7 @@ export default function PlatformBox() {
         {
           text: 'Confirmar',
           onPress: () => {
-            console.log('Item eliminado');
-            // Aquí puedes agregar la lógica para eliminar el item de verdad
+            deleteUserPlatform(props.userID, props.platformID);
           },
         },
       ],
@@ -35,8 +35,8 @@ export default function PlatformBox() {
     }
   };
   
-  const handleAccept = () => {
-    console.log('Nueva URL:', editedUrl);
+  const handleAccept = async () => {
+    updateUserPlatform(props.userID, props.platformID, editedUrl)
     setEditing(false);
   };
 
@@ -47,7 +47,7 @@ export default function PlatformBox() {
         <Image
         style={styles.image}
         source={{
-          uri: 'https://freelogopng.com/images/all_img/1658586823instagram-logo-transparent.png',
+          uri: props.URLImage
         }}
       />
         <View style={styles.editSection}>
@@ -59,12 +59,12 @@ export default function PlatformBox() {
           />
           <Button
             type="clear"
-            icon={<Icon name="edit" size={25} color="blue" />}
+            icon={<Icon name="done" size={25} color="white" />}
             onPress={handleAccept}
           />
           <Button
             type="clear"
-            icon={<Icon name="close" size={25} color="red" />}
+            icon={<Icon name="close" size={25} color="white" />}
             onPress={handleEdit}
           />
         </View>
@@ -74,18 +74,18 @@ export default function PlatformBox() {
         <Image
         style={styles.image}
         source={{
-          uri: 'https://freelogopng.com/images/all_img/1658586823instagram-logo-transparent.png',
+          uri: props.URLImage,
         }}
       />
-      <Text style={styles.mainText}>Instagram</Text>
+      <Text style={styles.mainText}>{props.platformName}</Text>
           <Button
             type="clear"
-            icon={<Icon name="edit" size={25} color="blue" />}
+            icon={<Icon name="edit" size={25} color="white" />}
             onPress={handleEdit}
           />
           <Button
             type="clear"
-            icon={<Icon name="delete" size={25} color="red" />}
+            icon={<Icon name="delete" size={25} color="white" />}
             onPress={handleDelete}
           />
         </>
