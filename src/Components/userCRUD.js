@@ -1,6 +1,6 @@
 var myHeaders = new Headers();
 myHeaders.append("Content-Type", "application/json");
-
+const publicIP = "http://54.89.160.101:3300";
 export const getUserProfile = async (userID) => {
     try {
       var raw = JSON.stringify({
@@ -12,12 +12,12 @@ export const getUserProfile = async (userID) => {
         body: raw,
         redirect: 'follow'
       };
-      const response = await fetch("http://192.168.0.7:3300/user/getUserProfile", requestOptions);
+      const response = await fetch( publicIP +"/user/getUserProfile", requestOptions);
       const result = await response.json();
       return result[0]
     } catch (error) {
       console.log('fetch error:', error);
-      return null; // Manejo de error, puedes personalizarlo según tus necesidades
+      return null;  
     }
   };
 
@@ -37,7 +37,7 @@ export const getUserProfile = async (userID) => {
         body: raw,
         redirect: 'follow'
       }
-      const response = await fetch("http://192.168.0.7:3300/user/updateUser", requestOptions);
+      const response = await fetch(publicIP + "/user/updateUser", requestOptions);
       const result = await response.json();
     }catch(e){
       console.log("Fetch Error: " + e)
@@ -58,7 +58,7 @@ export const getUserProfile = async (userID) => {
         body: raw,
         redirect: 'follow'
       }
-      const response = await fetch("http://192.168.0.7:3300/user/updateUserPhoto", requestOptions);
+      const response = await fetch(publicIP + "/user/updateUserPhoto", requestOptions);
       const result = await response.json();
     }catch(e){
       console.log("Fetch Error: " + e)

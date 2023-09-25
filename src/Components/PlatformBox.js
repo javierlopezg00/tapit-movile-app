@@ -20,6 +20,7 @@ export default function PlatformBox( props ) {
           text: 'Confirmar',
           onPress: () => {
             deleteUserPlatform(props.userID, props.platformID);
+            props.onDeletePlatform();
           },
         },
       ],

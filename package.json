@@ -9,7 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@react-native-picker/picker": "^2.4.10",
+    "@react-native-picker/picker": "2.4.8",
     "aws-sdk": "^2.1443.0",
     "expo": "~48.0.18",
     "expo-image-picker": "~14.1.1",

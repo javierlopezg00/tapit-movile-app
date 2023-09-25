@@ -2,22 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, ScrollView, View, TextInput, Modal } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Icon, Button } from 'react-native-elements';
-import { createUserPlatform, getPlatforms } from '../Components/platformsCRUD'
+import { createUserPlatform, getPlatforms,getUserPlatforms } from '../Components/platformsCRUD'
 
 import PlatformBox from '../Components/PlatformBox';
 
 export default function Platforms(props) {
   const [showModal, setShowModal] = useState(false);
   const [URL, setURL] = useState('');
-  const [platforms, setPlatforms] = useState([]);
+  const [platforms, setPlatforms] = useState(['']);
+  const [userPlatforms, setUserPlatforms] = useState([''])
   const [selectedPlatform, setSelectedPlatform] = useState(''); 
+  const [uploadPlatforms, setUploadPlatforms] = useState(false);
 
   useEffect(() => {
     (async () => {
       const platforms = await getPlatforms();
       setPlatforms(platforms);
+      setUserPlatforms(await getUserPlatforms(props.userID));
     })();
-  }, []);
+  }, [uploadPlatforms]);
 
   const handleAddNew = () => {
     setShowModal(true);
@@ -31,8 +34,14 @@ export default function Platforms(props) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {props.userPlatforms.map((platform, index) => (
-        <PlatformBox key={index} platformName={platform.platform} URLImage={platform.icon_url} platformID={platform.id_user_platform} userID={props.userID} />
+      {userPlatforms.map((platform, index) => (
+        <PlatformBox 
+          key={index} 
+          platformName={platform.platform} 
+          URLImage={platform.icon_url} 
+          platformID={platform.id_user_platform} 
+          userID={props.userID} 
+          onDeletePlatform={()=>{setUploadPlatforms(true)}}/>
       ))}
       <Button
         type="clear"
@@ -67,7 +76,8 @@ export default function Platforms(props) {
               type="clear"
               icon={<Icon name="done" size={40} color="white" />}
               onPress={() => {createUserPlatform(props.userID, selectedPlatform, URL)
-                             setShowModal(false);}}
+                              setUploadPlatforms(true)
+                              setShowModal(false);}}
             />
             <Button
               type="clear"

@@ -1,14 +1,15 @@
 
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Login from './src/Views/Login';
-import SignUp from './src/Views/SignUp';
 import Platforms from './src/Views/Platforms';
 import Menu from './src/Components/Menu';
 import Profile from './src/Views/Profile';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('Platforms'); // Componente inicial
+
+  const publicIP = "http://54.89.160.101:3300";
 
   const changeView = (viewName) => {
     setCurrentView(viewName);
@@ -33,7 +34,7 @@ export default function App() {
           redirect: 'follow'
         };
 
-        const response = await fetch("http://192.168.0.7:3300/user/getUserPlatforms", requestOptions);
+        const response = await fetch(publicIP + "/user/getUserPlatforms", requestOptions);
         const result = await response.json();
         
         setUserPlatforms(result);
@@ -48,7 +49,7 @@ export default function App() {
   let componentToRender;
 
   if (currentView === 'Platforms') {
-    componentToRender = <Platforms userPlatforms = {userPlatforms} userID = {17}/>;
+    componentToRender = <Platforms userID = {17}/>;
   } else if (currentView === 'Login') {
     componentToRender = <Login />;
   } else if (currentView === 'Profile') {

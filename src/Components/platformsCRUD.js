@@ -1,6 +1,31 @@
 var myHeaders = new Headers();
 myHeaders.append("Content-Type", "application/json");
+const publicIP = "http://54.89.160.101:3300";
 
+
+export const getUserPlatforms = async (userID) => {
+  try {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      "user_id": userID
+    });
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+    const response = await fetch(publicIP+ "/user/getUserPlatforms", requestOptions);
+    const result = await response.json();
+    
+    return result;
+  } catch (error) {
+    console.log('fetch error:', error);
+  }
+};
 
 export const getPlatforms = async () => {
     try {
@@ -11,11 +36,12 @@ export const getPlatforms = async () => {
         headers: myHeaders,
         redirect: 'follow'
       };
-      const response = await fetch("http://192.168.0.7:3300/platform/platforms", requestOptions);
+      const response = await fetch(publicIP + "/platform/platforms", requestOptions);
       const result = await response.json();
       return result;
       //setPlatforms(result);
     } catch (error) {
+      console.log("Hola perro");
       console.log('fetch error:', error);
     }
   };
@@ -38,7 +64,7 @@ export const createUserPlatform = async (userID, selectedPlatform, URL) => {
         redirect: 'follow'
       };
 
-      const response = await fetch("http://192.168.0.7:3300/platform/createUserPlatform", requestOptions);
+      const response = await fetch(publicIP + "/platform/createUserPlatform", requestOptions);
 
     } catch (error) {
       console.log("Fetch error: " + error);
@@ -60,7 +86,7 @@ export const updateUserPlatform = async (userID, platformID, editedUrl) => {
         body: raw,
         redirect: 'follow'
       }
-      const response = await fetch("http://192.168.0.7:3300/platform/updateUserPlatform", requestOptions);
+      const response = await fetch(publicIP + "/platform/updateUserPlatform", requestOptions);
       const result = await response.json();
     }catch(error){
       console.log("Fetch error: " + error)
@@ -84,7 +110,7 @@ export const updateUserPlatform = async (userID, platformID, editedUrl) => {
         redirect: 'follow'
       };
 
-      const response = await fetch("http://192.168.0.7:3300/platform/deleteUserPlatform", requestOptions);
+      const response = await fetch(publicIP + "/platform/deleteUserPlatform", requestOptions);
       const result = await response.json();
       console.log(result)
     }catch(error){

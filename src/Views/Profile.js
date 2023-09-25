@@ -3,6 +3,7 @@ import { StyleSheet, Text, Image, View, Modal, TextInput, TouchableOpacity } fro
 import { Icon, Button } from 'react-native-elements';
 import * as ImagePicker from 'expo-image-picker';
 import {getUserProfile, updateUser, updateUserPhoto} from '../Components/userCRUD'
+import { getUserPlatforms } from '../Components/platformsCRUD'
 import { S3 } from 'aws-sdk';
 
 const s3 = new S3({
@@ -12,7 +13,7 @@ const s3 = new S3({
 });
 
 export default function Profile(props) {
-
+  const [userPlatforms, setUserPlatforms] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [first_name, setFirst_name] = useState('');
   const [last_name, setLast_name] = useState('');
@@ -32,8 +33,8 @@ export default function Profile(props) {
       Bucket: 'tapitpictures',
       Key: `${uploadType}/p${props.userID}.jpg`,
       Body: blob,
-      ContentType: 'image/jpeg', // Asegúrate de establecer el tipo de contenido correcto
-      ContentDisposition: 'inline', // Configura el encabezado Content-Disposition
+      ContentType: 'image/jpeg', 
+      ContentDisposition: 'inline', 
     };
   
     s3.upload(params, function(err, data) {
@@ -84,6 +85,7 @@ export default function Profile(props) {
       setInfo_Box(profile.country)
       setProfilePicture(profile.url_profile_photo)
       setCoverPicture(profile.url_cover_photo)
+      setUserPlatforms(await getUserPlatforms(props.userID));
       
     })();
     (async () => {
@@ -130,7 +132,7 @@ export default function Profile(props) {
         }}
       />
       <View style={styles.platformImagesContainer}>
-        {props.userPlatforms.map((platform, index) => (
+        {userPlatforms.map((platform, index) => (
           <View key={index} style={styles.platformImageContainer}>
             <Image
               style={styles.iconImage}
